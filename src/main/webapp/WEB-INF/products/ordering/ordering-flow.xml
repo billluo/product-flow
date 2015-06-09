@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+      	http://www.springframework.org/schema/webflow
+      	http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<secured attributes="ROLE_USER" />  
+     
+	<input name="productId" required="true" />
+
+	<on-start>
+		<evaluate expression="orderService.createOrderItem(productId, currentUser.name)" result="flowScope.orderItem" />
+	</on-start>
+	
+	<view-state id="enterOrderingDetails" model="orderItem">
+		<secured attributes="ROLE_USER" />  
+		<binder>
+			<binding property="quantity" />
+			<binding property="creditCard" />
+			<binding property="creditCardName" />
+			<binding property="creditCardExpiryMonth" />
+			<binding property="creditCardExpiryYear" />
+		</binder>
+		<on-render>
+			<render fragments="body" />
+		</on-render>
+		<transition on="proceed" to="reviewOrdering" />
+		<transition on="cancel" to="cancel" bind="false" />
+	</view-state>
+	
+	<view-state id="reviewOrdering" model="orderItem">
+		<on-render>
+			<render fragments="body" />
+		</on-render>
+		<transition on="confirm" to="orderingConfirmed">
+			<!-- <evaluate expression="orderService.persistOrderItem(orderItem)" /> -->
+			<evaluate expression="orderService.save(orderItem)" />
+		</transition>
+		<transition on="revise" to="enterOrderingDetails" />
+		<transition on="cancel" to="cancel" />
+	</view-state>
+	
+	<end-state id="orderingConfirmed">
+		<output name="confirmed" value="'Your order is confirmed, you can order another product by searching again.'"/>
+	</end-state>
+
+	<end-state id="cancel" />
+
+</flow>

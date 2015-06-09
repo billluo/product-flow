@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org"
+      lang="en">
+
+<head>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- This <head> section is only used for static prototyping purposes. At runtime, -->
+    <!-- Tiles will only use the body fragment defined with tiles:fragment="content",  --> 
+    <!-- as specified at the corresponding views.xml file.                             -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <title>Spring Order Flow: Spring MVC and Web Flow Reference Application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <link rel="stylesheet" type="text/css" media="screen, projection" 
+          href="../styles/blueprint/screen.css" />
+    
+    <link rel="stylesheet" type="text/css" media="print" 
+          href="../styles/blueprint/print.css" />
+    
+    <!--[if lt IE 8]>
+        <link rel="stylesheet" type="text/css" media="screen, projection"
+              href="../styles/blueprint/ie.css" />
+    <![endif]-->
+    
+    <link rel="stylesheet" type="text/css" media="screen" 
+          href="../styles/booking.css" />
+
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <!-- Some styles and scripts are served from spring-js-resources-{ver}.jar at -->
+    <!-- runtime. Therefore not available for static prototyping. See the         -->
+    <!-- layouts/standard.html template file for detail.                          -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    
+</head>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- START of the content to be included in the execution result.  -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- Only the markup inside this <body> would be required in this  -->
+<!-- template if no static prototyping was intended.               -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<body tiles:fragment="content">
+
+
+<div class="span-10 append-2 last">
+    
+    <form action="#" th:object="${user}" th:action="@{/addUser}" method="post">
+    
+        <fieldset>
+        
+            <legend>Register Information</legend>
+        
+            <p>
+                <label for="username">User name:</label>
+                <br />
+                <input type="text" name="username" id="username" th:field="*{username}" />
+            </p>   
+   
+            <script type="text/javascript">
+                // <![CDATA[
+                    Spring.addDecoration(new Spring.ElementDecoration({
+                        elementId : "username",
+                        widgetType : "dijit.form.ValidationTextBox",
+                        widgetAttrs : { required : true }}));
+                // ]]>
+            </script>
+           
+            <p>
+                <label for="firstName">First Name:</label>
+                <br />
+                <input type="text" name="firstName" id="firstName" th:field="*{firstName}"/>
+            </p>
+            
+            <script type="text/javascript">
+                // <![CDATA[
+                    Spring.addDecoration(new Spring.ElementDecoration({
+                        elementId : "firstName",
+                        widgetType : "dijit.form.ValidationTextBox",
+                        widgetAttrs : { required : true}}));
+                // ]]>
+            </script>
+            
+            <p>
+                <label for="lastName">Last Name:</label>
+                <br />
+                <input type="text" name="lastName" id="lastName" th:field="*{lastName}"/>
+            </p>
+            
+            <script type="text/javascript">
+                // <![CDATA[
+                    Spring.addDecoration(new Spring.ElementDecoration({
+                        elementId : "lastName",
+                        widgetType : "dijit.form.ValidationTextBox",
+                        widgetAttrs : { required : false}}));
+                // ]]>
+            </script>   
+        
+            <p>
+                <label for="dob">Date of Birth:</label>
+                <br />
+                <input type="date" name="dob" id="dob" th:field="*{dob}" />
+            </p>
+            
+            <script type="text/javascript">
+                // <![CDATA[
+                    Spring.addDecoration(new Spring.ElementDecoration({
+                        elementId : "dob",
+                        widgetType : "dijit.form.DateTextBox",
+                        widgetAttrs : { required : false, datePattern : "yyyy-MM-dd" },
+                        promptMessage : "Please input date as 'yyyy-MM-dd' ."
+                    }));
+                // ]]>
+            </script>   
+                 
+            <p>
+                <label for="email">Email Address:</label>
+                <br />
+                <input type="text" name="email" id="email" th:field="*{email}" />
+            </p>
+            
+            <script type="text/javascript">
+                // <![CDATA[
+                    Spring.addDecoration(new Spring.ElementDecoration({
+                        elementId : "email",
+                        widgetType : "dijit.form.ValidationTextBox",
+                        widgetAttrs : { required : false,
+                        					regExp:"^[-!#$%&'*+/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+/0-9=?A-Z^_a-z{|}~])*@[a-zA-Z](-?[a-zA-Z0-9])*(\.[a-zA-Z](-?[a-zA-Z0-9])*)+$",
+                        					invalidMessage : "Please use A-Z and number."
+                        					}}));
+                // ]]>
+            </script>   
+                     
+            <p>
+                <label for="password">Password:</label>
+                <br />
+                <input type="password" name="password" id="password" th:field="*{password}" />
+            </p>
+            
+            <script type="text/javascript">
+                // <![CDATA[
+                    Spring.addDecoration(new Spring.ElementDecoration({
+                        elementId : "password",
+                        widgetType : "dijit.form.ValidationTextBox",
+                        widgetAttrs : { required : true}}));
+                // ]]>
+            </script>
+            
+
+           
+            <p>
+                <button id="submit" type="submit">Register</button>
+                <script type="text/javascript">
+                    Spring.addDecoration(
+                            new Spring.ValidateAllDecoration({event : 'onclick', elementId : 'submit'}));
+                </script>
+            </p>
+            
+        </fieldset>
+        
+    </form>
+    
+</div>
+
+
+</body>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- END of the content to be included in the execution result -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+</html>

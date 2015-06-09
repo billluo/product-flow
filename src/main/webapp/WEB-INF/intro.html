@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org"
+      lang="en">
+
+<head>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- This <head> section is only used for static prototyping purposes. At runtime, -->
+    <!-- Tiles will only use the body fragment defined with tiles:fragment="content",  --> 
+    <!-- as specified at the corresponding views.xml file.                             -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <title>Spring Order: Spring MVC and Web Flow  Application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <link rel="stylesheet" type="text/css" media="screen, projection" 
+          href="../styles/blueprint/screen.css" />
+    
+    <link rel="stylesheet" type="text/css" media="print" 
+          href="../styles/blueprint/print.css" />
+
+    
+    <link rel="stylesheet" type="text/css" media="screen" 
+          href="../styles/booking.css" />
+
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <!-- Some styles and scripts are served from spring-js-resources-{ver}.jar at -->
+    <!-- runtime. Therefore not available for static prototyping. See the         -->
+    <!-- layouts/standard.html template file for detail.                          -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    
+</head>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- START of the content to be included in the execution result.  -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- Only the markup inside this <body> would be required in this  -->
+<!-- template if no static prototyping was intended.               -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<body tiles:fragment="content">
+
+<div>
+    <h1>Welcome to Order Flow System</h1>
+    <p>
+        This sample demonstrates how to use Spring MVC and Spring Web Flow together with Thymeleaf and Tiles.
+    </p>
+    <hr />
+    <p>
+        Modules include:
+    </p>
+    <ul>
+        <li>Order using Spring Web Flow</li>
+        <li>Security and User Registration</li>
+        <li>JPA Reporitory and Data Service</li>
+        <li>Thymeleaf and HTML as Front end Solution</li>
+        <li>Javascript, AJAX integrated</li>
+        <li>SpringSource Tool Suite integration, with support for graphical flow modeling and visualization</li>
+    </ul>
+    <p>
+        <a href="products/search.html" th:href="@{/products/search}">Start your Order Flow</a>
+    </p>
+</div>
+
+
+</body>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- END of the content to be included in the execution result -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+</html>

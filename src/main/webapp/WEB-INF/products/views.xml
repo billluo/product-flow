@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+	
+<tiles-definitions>
+	
+	<definition name="products/search" extends="standardLayout">
+		<put-attribute name="body">
+			<definition template="products/search.html :: content" templateType="thymeleaf">
+				<put-attribute name="searchForm" value="/products/searchForm.html :: content" type="thymeleaf"/>
+				<put-attribute name="ordersTable" value="/products/ordersTable.html :: content" type="thymeleaf"/>
+			</definition>
+		</put-attribute>
+	</definition>
+
+	<definition name="products/*" extends="standardLayout" templateType="thymeleaf">
+		<put-attribute name="body" value="/products/{1}.html :: content" type="thymeleaf"/>
+	</definition>
+
+</tiles-definitions>

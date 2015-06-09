@@ -1,0 +1,8 @@
+insert into Customer (username, firstname) values ('keith', 'Keith')
+insert into Customer (username, firstname) values ('erwin', 'Erwin')
+insert into Customer (username, firstname) values ('jeremy', 'Jeremy')
+insert into Customer (username, firstname) values ('scott', 'Scott')
+insert into Category (name,description) values ('TV', 'smartTV')
+insert into Category (name,description) values ('Cell Phone', 'Cell phone')
+insert into Product (name,description, category_id, price) values ( 'Sony65E1338','Sony 65 smartTV', 1, 1500)
+insert into Product (name,description, category_id, price) values ( 'iPhone6','iPhone6 from Apple', 2, 800)

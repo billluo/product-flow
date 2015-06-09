@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org"
+      lang="en">
+
+<head>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- This <head> section is only used for static prototyping purposes. At runtime, -->
+    <!-- Tiles will only use the body fragment defined with tiles:fragment="content",  --> 
+    <!-- as specified at the corresponding views.xml file.                             -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <title>Spring Travel: Spring MVC and Web Flow Reference Application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <link rel="stylesheet" type="text/css" media="screen, projection" 
+          href="../../../styles/blueprint/screen.css" />
+    
+    <link rel="stylesheet" type="text/css" media="print" 
+          href="../../../styles/blueprint/print.css" />
+    
+    <!--[if lt IE 8]>
+        <link rel="stylesheet" type="text/css" media="screen, projection"
+              href="../../../styles/blueprint/ie.css" />
+    <![endif]-->
+    
+    <link rel="stylesheet" type="text/css" media="screen" 
+          href="../../../styles/booking.css" />
+          
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <!-- Some styles and scripts are served from spring-js-resources-{ver}.jar at -->
+    <!-- runtime. Therefore not available for static prototyping. See the         -->
+    <!-- layouts/standard.html template file for detail.                          -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    
+</head>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- START of the content to be included in the execution result.  -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- Only the markup inside this <body> would be required in this  -->
+<!-- template if no static prototyping was intended.               -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<body tiles:fragment="content">
+
+
+
+<div id="orderingForm">
+
+    <div class="span-5">
+    
+        <h3 th:text="${orderItem.product.name}">The Herb Plaza</h3>
+        
+        <address th:object="${orderItem.product}">
+            <span th:text="*{name}">Thyme Square, 13</span>
+            <br />
+            <span th:text="*{description}">Icetown</span>, 
+        </address>
+        <p>
+            Price: <span th:text="${orderItem.product.price}">400.00</span>
+        </p>
+        
+    </div>
+    
+    <div class="span-12">
+    
+        <form id="ordering" action="#" th:object="${orderItem}" th:action="${flowExecutionUrl}" method="post">
+
+            <div class="error" th:if="${#fields.hasErrors('*')}">
+                <span th:each="err : ${#fields.errors('*')}">
+                  <span th:text="${err}">Input is incorrect</span><br />
+                </span>
+            </div>
+        
+            <fieldset>
+                <legend>Product Order</legend>
+                <div>
+                    <div class="span-4">
+                        <label for="productName">Product:</label>
+                    </div>
+                    <div class="span-7 last">
+                        <p th:text="${orderItem.product.name}" >The Herb Plaza</p>
+                        
+                    </div>
+                </div>
+                <div>
+                    <div class="span-4">
+                        <label for="productPrice">Price: </label>
+                    </div>
+                    <div class="span-7 last">
+                    		<p id="priceView" th:text="${orderItem.product.price}" >The Herb Plaza</p>   
+                    		<input type="hidden" id="price" th:field="${orderItem.product.price}" ></input>                  
+                    </div>
+                </div>
+                <div>
+                    <div class="span-4">
+                        <label for="quantity">Quantity: </label>
+                    </div>
+                    <div class="span-7 last">
+	                    <p><input id="quantity" type="number" style="width:60px" step="1" th:field="*{quantity}"  onchange="sumTotal()" /></p>
+	                    <p>---------------------------------------------------</p>
+	                </div>
+	             </div>	        
+ 				
+                <div>
+                    <div class="span-4">
+                        <label for="total">Price Total: </label>
+                    </div>
+                    <div class="span-7 last" id="total" ><p> $                  
+                    		<span th:with="result=${orderItem.product.price * orderItem.quantity}">
+ 						<span  th:text="${result}"></span>
+	                		</span></p>
+	                </div>
+	             </div>
+
+                <div>
+                    <div class="span-4">
+                        <label for="creditCard">Credit Card #:</label>
+                    </div>
+                    <div class="span-7 last">
+                        <p><input type="text" th:field="*{creditCard}" /></p>
+                        <script type="text/javascript">
+                            // <![CDATA[
+                            Spring.addDecoration(new Spring.ElementDecoration({
+                                elementId : "creditCard",
+                                widgetType : "dijit.form.ValidationTextBox",
+                                widgetAttrs : { required : true, invalidMessage : "A 16-digit credit card number is required.", 
+                                regExp : "[0-9]{16}"  }}));
+                            // ]]>
+                            
+                        </script>
+                    </div>
+                </div>
+                <div>
+                    <div class="span-4">
+                        <label for="creditCardName">Credit Card Name:</label>
+                    </div>
+                    <div class="span-7 last">
+                        <p><input type="text" th:field="*{creditCardName}" maxlength="40" /></p>
+                        <script type="text/javascript">
+                            // <![CDATA[
+                            Spring.addDecoration(new Spring.ElementDecoration({
+                                elementId : "creditCardName",
+                                widgetType : "dijit.form.ValidationTextBox",
+                                widgetAttrs : { required : true }}));
+                            // ]]>
+                        </script>
+                    </div>
+                </div>
+                <div>
+                    <div class="span-4">
+                        <label for="creditCardExpiryMonth">Expiration Date:</label>
+                    </div>
+                    <div class="span-7 last">
+                        <p>
+                            <select th:field="*{creditCardExpiryMonth}">
+                                <option value="1">Jan</option>
+                                <option value="2">Feb</option>
+                                <option value="3">Mar</option>
+                                <option value="4">Apr</option>
+                                <option value="5">May</option>
+                                <option value="6">Jun</option>
+                                <option value="7">Jul</option>
+                                <option value="8">Aug</option>
+                                <option value="9">Sep</option>
+                                <option value="10">Oct</option>
+                                <option value="11">Nov</option>
+                                <option value="12">Dec</option>
+                            </select>
+                            <select th:field="*{creditCardExpiryYear}">
+                                <option value="1">2008</option>
+                                <option value="2">2009</option>
+                                <option value="3">2010</option>
+                                <option value="4">2011</option>
+                                <option value="5">2012</option>
+                            </select>
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <p>
+                        <button type="submit" id="proceed" name="_eventId_proceed">Proceed</button>
+                        <button type="submit" name="_eventId_cancel" >Cancel</button>
+                    </p>
+                    <script type="text/javascript">
+                        // <![CDATA[
+                        Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));
+                        Spring.addDecoration(new Spring.AjaxEventDecoration({elementId:'proceed',event:'onclick',formId:'ordering'}));
+                        // ]]>
+                    </script>
+                </div>
+            </fieldset>
+            
+        </form>
+            
+    </div>
+    
+</div>
+<script type="text/javascript" >
+	function sumTotal() {
+   		var x = document.getElementById("price").value;
+		var y = document.getElementById("quantity").value;
+		var z= (x*y);
+    		document.getElementById("total").innerHTML = "<p>$ " + z +"</p>";
+	}
+</script>
+
+</body>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- END of the content to be included in the execution result -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+</html>
