@@ -9,6 +9,7 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -19,6 +20,7 @@ import org.webflow.admin.JpaUserDetailsService;
 import org.webflow.admin.RegisterUsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity
 @EnableWebMvcSecurity
 @ComponentScan({"org.webflow.admin","org.webflow.domain","org.webflow.order"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -80,7 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http
 			.authorizeRequests() 
-				.antMatchers("/admin","/admin/**").hasRole("ADMIN") 
+				.antMatchers("/admin","/admin/**").hasRole("ADMIN")
+				.antMatchers("/categories/**").hasRole("USER")
 			.and() 
 			.formLogin()
 				.loginPage("/login")

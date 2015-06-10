@@ -16,6 +16,8 @@ public class DispatcherServletInitializer  extends AbstractAnnotationConfigDispa
 		return new Class<?>[] {
 			DataAccessConfig.class,
 			SecurityConfig.class,
+			RestSecurityConfig.class,
+			//ResourceServerConfig.class,
 			WebMvcConfig.class,
 			WebFlowConfig.class
 		};

@@ -15,7 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.webflow.domain.ProductImpl;
 
 @RestController
-@RequestMapping("/{categoryId}/products")
+@RequestMapping("/categories/{categoryId}/products")
 public class ProductRestController {
 
 	private final ProductImplRepository productRepository;
