@@ -1,8 +1,4 @@
-# product-flow
-<<<<<<< HEAD
-=======
-
-This project is to catch up with latest Spring features and improvements, and use Spring MVC, REST service, Web Flow, Security, Apache Tile, and Thymeleaf.
+This project is to catch up with latest Spring features and improvements, and use Spring MVC, REST service, Web Flow, Security (including OAuth2), Apache Tile, and Thymeleaf.
 
 The main features are:
 
@@ -16,9 +12,8 @@ The main features are:
 
 Guide to use:
 
-1. download with "git clone 'this git project URL'" to loacal drive
+download with "git clone 'this git project URL'" to loacal drive
 
-2. use command line tool: mvn package
+use command line tool: mvn package
 
-3. it is recommended to import to Spring IDE (Eclipse, STS etc.)
->>>>>>> 2ada7998a451083c09bd2408da9006fd98790ccc
+it is recommended to import to Spring IDE (Eclipse, STS etc.)
