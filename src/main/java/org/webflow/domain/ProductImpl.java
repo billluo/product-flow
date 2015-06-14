@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 
 
 
+
+
+
 //import javax.persistence.Access;
 //import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -17,6 +20,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.webflow.order.CategoryImplRepository;
 
 //import org.hibernate.validator.constraints.NotEmpty;
 
@@ -36,7 +42,9 @@ public class ProductImpl implements Serializable {
     private String name;
 
     private String description;
-
+    
+    @Autowired
+    CategoryImplRepository categoryRepository;
 
 	@ManyToOne
     private CategoryImpl category;
@@ -50,7 +58,15 @@ public class ProductImpl implements Serializable {
     	this.description=description;
     	this.category=category;
     }
-
+    
+    public ProductImpl(String categoryId,String name,String description) {
+    	this.name=name;
+    	this.description=description;
+    	
+    	Long categoryIdLong=Long.parseLong(categoryId);
+    	this.category=categoryRepository.findById(categoryIdLong);
+    }
+    
     @Id
     @GeneratedValue
     public Long getId() {

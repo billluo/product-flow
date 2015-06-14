@@ -22,18 +22,20 @@ public class ProductRestController {
 
 	private final CategoryImplRepository categoryRepository;
 
-	@RequestMapping(method = RequestMethod.POST)
-	ResponseEntity<?> add(@PathVariable String categoryId, @RequestBody ProductImpl input) {
-		this.validateCategory(categoryId);
+	@RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+	ResponseEntity<ProductImpl> add(@PathVariable String categoryId, @RequestBody ProductImpl input) {
+		//add
+		Long categoryIdLong=Long.parseLong(categoryId);
+		this.validateCategory(categoryIdLong);
 		
-		ProductImpl result = productRepository.save(new ProductImpl(input.getCategory(),
+		ProductImpl result = productRepository.save(new ProductImpl(categoryRepository.findById(categoryIdLong),
 				input.getName(), input.getDescription()));
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(ServletUriComponentsBuilder
 				.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(result.getId()).toUri());
-		return new ResponseEntity<Object>(null, httpHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<ProductImpl>(null, httpHeaders, HttpStatus.CREATED);
 		
 	}
 
@@ -45,7 +47,8 @@ public class ProductRestController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	List<ProductImpl> getProducts(@PathVariable String categoryId) {
-		this.validateCategory(categoryId);
+		Long categoryIdLong=Long.parseLong(categoryId);
+		this.validateCategory(categoryIdLong);
 		return this.productRepository.findByCategory(categoryRepository.findByNameContainingIgnoringCase(categoryId));
 	}
 
@@ -56,9 +59,9 @@ public class ProductRestController {
 		this.categoryRepository = categoryRepository;
 	}
 
-	private void validateCategory(String categoryId) {
+	private void validateCategory(Long categoryId) {
 
-		if (this.categoryRepository.findByNameContainingIgnoringCase(categoryId)==null){
+		if (this.categoryRepository.findById(categoryId)==null){
 			 throw new  ProductNotFoundException(categoryId);
 		}		
 	}	
@@ -69,7 +72,7 @@ public class ProductRestController {
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class ProductNotFoundException extends RuntimeException {
 
-	public ProductNotFoundException(String categoryId) {
+	public ProductNotFoundException(Long categoryId) {
 		super("could not find Category '" + categoryId + "'.");
 	}
 	

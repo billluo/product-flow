@@ -17,5 +17,7 @@ public interface CategoryImplRepository extends JpaRepository<CategoryImpl,Long>
 	List<CategoryImpl> findAll();
 	
 	CategoryImpl findByNameContainingIgnoringCase(String name);
+	//add
+	CategoryImpl findById(Long Id);
 
 }
