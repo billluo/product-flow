@@ -31,7 +31,7 @@ import org.webflow.order.CategoryImplRepository;
  */
 @Entity
 @Table(name ="Product")
-public class ProductImpl implements Serializable {
+public class ProductImpl implements Product,Serializable {
     /**
 	 * 
 	 */

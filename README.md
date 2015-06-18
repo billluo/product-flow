@@ -1,4 +1,4 @@
-This project is to catch up with latest Spring features and improvements, and use Spring MVC, REST service, Web Flow, Security (including OAuth2), Apache Tile, and Thymeleaf.
+This project is to catch up with latest Spring features and improvements, and integrate Spring MVC, REST service, Hibernate, Web Flow, Security (including OAuth2), Apache Tile, and Thymeleaf.
 
 The main features are:
 

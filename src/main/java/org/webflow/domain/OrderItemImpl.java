@@ -81,11 +81,10 @@ public class OrderItemImpl implements OrderItem, Serializable {
 	return product.getPrice().multiply(new BigDecimal(getQuantity()));
     }
 
-    @Transient
     public int getQuantity() {
 	    return quantity;
     }
-    @Transient
+    
     public void setQuantity(int quantity) {
     		this.quantity = quantity;
     }
@@ -139,7 +138,7 @@ public class OrderItemImpl implements OrderItem, Serializable {
 	this.creditCard = creditCard;
     }
 
-    @Transient
+    
     public String getDescription() {
 	DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
 	return product == null ? null : product.getName() + ", " + df.format(getOrderDate()) + " to "

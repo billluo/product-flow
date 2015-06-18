@@ -42,7 +42,7 @@ public class ProductRestControllerTest {
 
     private MockMvc mockMvc;
 
-    private HttpMessageConverter mappingJackson2HttpMessageConverter;
+    private HttpMessageConverter<Object> mappingJackson2HttpMessageConverter;
 
     private CategoryImpl category;
 
@@ -77,7 +77,6 @@ public class ProductRestControllerTest {
                 .andExpect(jsonPath("$.id", is(this.productList.get(0).getId().intValue())));               
     }
 
-    @SuppressWarnings("unchecked")
 	protected String json(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
         this.mappingJackson2HttpMessageConverter.write(
