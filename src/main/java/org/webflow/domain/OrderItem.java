@@ -16,15 +16,11 @@ public interface OrderItem {
     public void setQuantity(int quantity) ;
 
     public Long getId() ;
-
     public void setId(Long id) ;
 
     public Date getOrderDate() ;
     public void setOrderDate(Date datetime) ;
 
-    /**
-     * @return
-     */
     public ProductImpl getProduct() ;//
     public void setProduct(ProductImpl product);
 
@@ -46,12 +42,6 @@ public interface OrderItem {
     public int getCreditCardExpiryYear() ;
     public void setCreditCardExpiryYear(int creditCardExpiryYear) ;
 
-    /**
-     * @return
-     */
     public CategoryImpl getCategory() ;
     public void setCategory(Category category) ;
-
-    public String toString() ;
-
 }

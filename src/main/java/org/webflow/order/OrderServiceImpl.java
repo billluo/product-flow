@@ -5,13 +5,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Component;
-//import org.springframework.stereotype.Component;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -26,23 +24,31 @@ import org.webflow.order.OrderItemImplRepository;
 import org.webflow.order.ProductImplRepository;
 
 /**
- * A JPA-based implementation of the Ordering Service. Delegates to a JPA entity manager to issue data access calls
- * against the backing repository. The EntityManager reference is provided by the managing container (Spring)
- * automatically.
+ * A JPA-based implementation of the Ordering Service. Delegates to a JPA entity manager to 
+ * issue data access calls against the backing repository. The EntityManager reference is 
+ * provided by the managing container (Spring) automatically.
+ * @author bluo
+ *
+ */
+/**
+ * @author bluo
+ *
  */
 @Service("orderService")
 @Transactional
-@Repository
 public class OrderServiceImpl implements OrderService {
-
-    private EntityManager em;
-    
+	
+    private EntityManager em;   
     private final OrderItemImplRepository orderItemRepository;
-
     private final ProductImplRepository productRepository;
-
     private final UserRepository userRepository;
     
+    /**
+     * @param productRepository
+     * @param orderItemRepository
+     * @param userRepository
+     * inject Spring repository beans to service constructor
+     */
     @Autowired
     public OrderServiceImpl(ProductImplRepository productRepository,
     		OrderItemImplRepository orderItemRepository, 		
@@ -52,109 +58,122 @@ public class OrderServiceImpl implements OrderService {
     	this.userRepository=userRepository;
     }
     
-    @PersistenceContext
+    /**
+     * @param em using @PersistenceContext inject entityManager
+     * from Persistent Unit "OrderPU"
+     */
+    @PersistenceContext(name="OrderPU")
     public void setEntityManager(EntityManager em) {
 	this.em = em;
     }
 
     
+    /**
+     * This query doesn't paginate the result list
+     * @param username
+     */
     @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
-    public List<OrderItem> findOrderItems(String username) {
-	if (username != null) {
-	    return em.createQuery("select o from OrderItemImpl o where o.user.username = :username order by o.orderDate")
-		    .setParameter("username", username).getResultList();
-	} else {
-	    return null;
-	}
+    public List<OrderItemImpl> findOrderItems(String username) {
+    		if (username != null) {
+//			JPA 2.0 can use generic applied to result list
+    			TypedQuery<OrderItemImpl> oQuery = em.createQuery("select o from OrderItemImpl o where "
+    					+ "o.user.username = :username order by o.orderDate", OrderItemImpl.class);
+    			return oQuery.setParameter("username", username)
+    						 .getResultList();
+    		} else {
+    			return null;
+    		}
     }
-
     
+    /**
+     * Result pagination-- there are two ways :
+     * One way for pagination: use Spring Repository and Page (PageRequest) interface 
+     * to pull out result pages
+     */ 
     @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
-    public List<Product> findProducts(ProductCriteria criteria)  {
+	public Page<OrderItemImpl> findOrderItems(String name, Pageable pageable) {
+		return orderItemRepository.findByUser(userRepository.findByUsername(name), pageable);
+	}
+    
+    /**
+     * Other way for pagination: use JPA-Hibernate function setFirstResult &
+     * setMaxResult to pull out result pages
+     */
+    @Transactional(readOnly = true)
+    public List<ProductImpl> findProducts(ProductCriteria criteria)  {
 	String pattern = getSearchPattern(criteria);
 	int startIndex = criteria.getPage() * criteria.getPageSize();
-	return em
-		.createQuery(
-			"select p from ProductImpl p where lower(p.name) like :pattern or lower(p.description) like :pattern "
-				+ " or lower(p.category.name) like :pattern")
-		.setParameter("pattern", pattern).setFirstResult(startIndex).setMaxResults(criteria.getPageSize())
-		.getResultList();
+	TypedQuery<ProductImpl> pQuery = em.createQuery("select p from ProductImpl p "
+			+ "where lower(p.name) like :pattern "
+			+ "or lower(p.description) like :pattern "
+			+ " or lower(p.category.name) like :pattern",ProductImpl.class);
+	return pQuery.setParameter("pattern", pattern)
+			.setFirstResult(startIndex)
+			.setMaxResults(criteria.getPageSize())
+			.getResultList();
     }
 
     
     @Transactional(readOnly = true)
-    public OrderItem createOrderItem(Long productId, String username) {
-	ProductImpl product = em.find(ProductImpl.class, productId);
-	User user = findUser(username);
-	//default units as 1
-	OrderItem orderItem = new OrderItemImpl(product, user, 1);
+    public OrderItemImpl createOrderItem(Long productId, String username) {
+    		ProductImpl product = em.find(ProductImpl.class, productId);
+    		User user = findUser(username);
+    		//default units as 1
+    		OrderItemImpl orderItem = new OrderItemImpl(product, user, 1);
 
-	return orderItem;
+    		return orderItem;
     }
-    
-    //add for test
     
     @Transactional(readOnly = true)
     public OrderItem createOrderItem(Long productId) {
-	ProductImpl product = em.find(ProductImpl.class, productId);
-	OrderItem orderItem = new OrderItemImpl(product, 1);
-	return orderItem;
-    }
-    
-    
-    @Transactional
-    public void persistOrderItem(OrderItem orderItem) {
-	em.persist(orderItem);
-    }
-
-    
+    		ProductImpl product = em.find(ProductImpl.class, productId);
+    		OrderItem orderItem = new OrderItemImpl(product, 1);
+    		return orderItem;
+    }  
+//    @Transactional
+//    	public void persistOrderItem(OrderItem orderItem) {
+//    		em.persist(orderItem);
+//    }
     @Transactional
     public void cancelOrderItem(Long id) {
-    	OrderItem orderItem = em.find(OrderItemImpl.class, id);
-	if (orderItem != null) {
-	    em.remove(orderItem);
-	}
+    		OrderItem orderItem = em.find(OrderItemImpl.class, id);
+    		if (orderItem != null) {
+    			em.remove(orderItem);
+    		}
     }
 
-    // helpers
-
+    // helpers class
     private String getSearchPattern(ProductCriteria criteria) {
-	if (StringUtils.hasText(criteria.getSearchString())) {
-	    return "%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%";
-	} else {
-	    return "%";
-	}
+    		if (StringUtils.hasText(criteria.getSearchString())) {
+    			return "%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%";
+    		} else {
+    			return "%";
+    		}
     }
-
     
     @Transactional
-    public void save(OrderItem orderItem) {
-    	//downcast for order item implementation
-    	OrderItemImpl orderItemImpl =(OrderItemImpl) orderItem;
-    	//calculate product order total amount and pass to itemTotal
-    	this.calculateTotal(orderItemImpl);
-    	//save orderItem
-    	orderItemRepository.save(orderItemImpl);
+    public void save(OrderItemImpl orderItem) {
+    		//downcast for order item implementation
+    		OrderItemImpl orderItemImpl =(OrderItemImpl) orderItem;
+    		//calculate product order total amount and pass to itemTotal
+    		this.calculateTotal(orderItemImpl);
+    		//save orderItem
+    		orderItemRepository.save(orderItemImpl);
     }
    
     
     @Transactional(readOnly = true)
     public ProductImpl findProductById(Long id) {
-    	
-    	//ProductImpl foundProduct= productRepository.findById(id);
-	return productRepository.findById(id);
+    		return productRepository.findById(id);
     }
     
-    
+    @Transactional(readOnly = true)
     public User findUser(String username) {
     		return userRepository.findByUsername(username);
     }
 
-	
-	public void calculateTotal(OrderItem orderItem) {
-
+    @Transactional
+	public void calculateTotal(OrderItemImpl orderItem) {
 	    BigDecimal totalCost  = orderItem.getProduct().getPrice().multiply(
 	    		new BigDecimal(orderItem.getQuantity()));    
 	    orderItem.setItemTotal(totalCost); 

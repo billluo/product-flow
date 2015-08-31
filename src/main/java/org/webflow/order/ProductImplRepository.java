@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.webflow.domain.CategoryImpl;
+import org.webflow.domain.Product;
 import org.webflow.domain.ProductImpl;
 import org.webflow.order.ProductCriteria;
 

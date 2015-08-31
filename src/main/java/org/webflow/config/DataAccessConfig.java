@@ -22,45 +22,51 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class DataAccessConfig {
 
-  @Bean
-  public EntityManagerFactory entityManagerFactory() {
-    HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-    vendorAdapter.setGenerateDdl(true);
+//	use Local EntiytManager to manage persistence layer
+	@Bean
+	public EntityManagerFactory entityManagerFactory() {
+		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+		vendorAdapter.setGenerateDdl(true);
 
-    LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-    factory.setJpaVendorAdapter(vendorAdapter);
-    factory.setPackagesToScan("org.webflow.admin","org.webflow.domain","org.webflow.order");
-    factory.setDataSource(dataSource());
+		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+//		define as specific Persistence Unit
+		factory.setPersistenceUnitName("OrderPU");
+		factory.setJpaVendorAdapter(vendorAdapter);
+		factory.setPackagesToScan("org.webflow.admin","org.webflow.domain","org.webflow.order");
+		factory.setDataSource(dataSource());
 
-    factory.setJpaProperties(additionalProperties());
-    factory.afterPropertiesSet();
+		factory.setJpaProperties(additionalProperties());
+		factory.afterPropertiesSet();
     
-    return factory.getObject();
-  }
+		return factory.getObject();
+	}
 
-  @Bean
-  public DataSource dataSource() {
+//	use memory database for user registration and ordering data 
+	@Bean
+	public DataSource dataSource() {
 
-    EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-    return builder.setType(EmbeddedDatabaseType.HSQL)
+		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+		return builder.setType(EmbeddedDatabaseType.HSQL)
     				  .setName("orderingDatabase")
     				  .build();
 
-  }
-  @Bean
-  public PlatformTransactionManager transactionManager() {
+	}
+	
+	@Bean
+	public PlatformTransactionManager transactionManager() {
 
-    JpaTransactionManager txManager = new JpaTransactionManager();
-    txManager.setEntityManagerFactory(entityManagerFactory());
-    return txManager;
-  }
+		JpaTransactionManager txManager = new JpaTransactionManager();
+		txManager.setEntityManagerFactory(entityManagerFactory());
+		return txManager;
+	}
   
-  Properties additionalProperties() {
-      Properties properties = new Properties();
-      properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-      properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-      properties.setProperty("hibernate.show_sql","true");
-      properties.setProperty("hibernate.cache.provider_class","org.hibernate.cache.HashtableCacheProvider");
-      return properties;
+	Properties additionalProperties() {
+		Properties properties = new Properties();
+//		auto create/drop tables for JPA entities
+		properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+		properties.setProperty("hibernate.show_sql","true");
+		properties.setProperty("hibernate.cache.provider_class","org.hibernate.cache.HashtableCacheProvider");
+		return properties;
    }
 }

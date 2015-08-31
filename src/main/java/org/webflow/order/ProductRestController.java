@@ -1,6 +1,7 @@
 package org.webflow.order;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.webflow.domain.Product;
 import org.webflow.domain.ProductImpl;
 
 @RestController
@@ -40,7 +42,7 @@ public class ProductRestController {
 	}
 
 	@RequestMapping(value = "/{productId}", method = RequestMethod.GET)
-	ProductImpl getProduct(@PathVariable String categoryId, @PathVariable Long productId) {
+	Product getProduct(@PathVariable String categoryId, @PathVariable Long productId) {
 		//this.validateCategory(categoryId);
 		return this.productRepository.findById(productId);
 	}

@@ -1,15 +1,19 @@
 package org.webflow.admin;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webflow.admin.UserRepository;
 import org.webflow.domain.User;
 
-@Service
+/**
+ * This data service queries on user table and add/update/delete user
+ * @author bluo
+ *
+ */
+@Service("jpaUserService")
 @Transactional
-@Repository
 public class JpaUserService  {
 	
 	@Autowired

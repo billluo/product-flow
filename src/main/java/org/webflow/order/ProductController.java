@@ -25,7 +25,9 @@ import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 import org.webflow.admin.UserRepository;
 import org.webflow.domain.OrderItem;
+import org.webflow.domain.OrderItemImpl;
 import org.webflow.domain.Product;
+import org.webflow.domain.ProductImpl;
 import org.webflow.domain.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -72,7 +74,7 @@ public class ProductController {
     @RequestMapping(value = "/products/search", method = RequestMethod.GET)
     public void search(ProductCriteria productCriteria, Principal currentUser, Model model) {
     		if (currentUser != null) {
-    			List<OrderItem> orderItems = orderService.findOrderItems(currentUser.getName());
+    			List<OrderItemImpl> orderItems = orderService.findOrderItems(currentUser.getName());
     			model.addAttribute("orderItems",orderItems);
 
     		}
@@ -81,7 +83,7 @@ public class ProductController {
     @RequestMapping(value = "/products", method = RequestMethod.GET)
     public String list(ProductCriteria criteria, Model model) {
 
-	List<Product> products = orderService.findProducts(criteria);
+	List<ProductImpl> products = orderService.findProducts(criteria);
 	model.addAttribute("products",products);
 	return "products/list";
     }
